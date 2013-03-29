@@ -1,5 +1,5 @@
 
-/* helper.c for github.com/f03lipe/decrypter
+/* helper.c for github.com/f03lipe/decipher
  */
 
 #include <stdio.h>

@@ -1,5 +1,5 @@
 
-/* A basic 1:1 matcher written in C.
+/* A basic substitution decipher written in C.
  * f03lipe, 2013.
  */
 

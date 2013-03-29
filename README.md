@@ -1,4 +1,4 @@
-# f03lipe/decrypter
+# f03lipe/decipher
 
 ### Finds a 1:1 correspondence between an enconded message and english words.<br>
 #### (matches against any dictionary, really)
