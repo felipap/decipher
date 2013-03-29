@@ -5,32 +5,7 @@
 
 
 #include "basic.h"
-
-
-void *
-cmalloc(size_t msize)
-/* Custom malloc to watch for failures while alloc memory. */
-{
-	void * p;
-	char msg[15];
-
-	if (!(p = calloc(msize, (size_t) 1))) {
-		sprintf(msg, "malloc(%ld) failed", msize);
-		quit(msg);
-	}
-	return p;
-}
-
-
-
-void
-quit(char * msg)
-/* Show message and quit. */
-{
-	fprintf(stderr, "%s\n", msg);
-	exit(1);
-}
-
+#include "helpers.c"
 
 
 int **
@@ -112,28 +87,7 @@ getDictWords(char * dictBuffer[])
 }
 
 
-void
-printIntArray (int * ptr)
-{
-	printf("%d", *ptr++);
-	for (; *ptr != -1; ptr++)
-		printf(",%d", *ptr);
-	printf("\n");
-}
-
-
-void
-printMessage(MapObj * map, int ** msgs)
-{
-	char * word = cmalloc(50);
-
-	printf("> ");
-	for (; *msgs; msgs++) {
-		word = mapToWord(word, map, *msgs);
-		printf("%s ", word);
-	}
-	printf("\n");
-}
+/****/
 
 
 void
@@ -207,7 +161,7 @@ combine(MapObj * map, int * symbols, char * alphabet)
 		combine(nmap, symbols+1, nalphab);
 	}
 
-	freeMapObj(nmap);
+	free(nmap);
 }
 
 int *
@@ -263,6 +217,7 @@ main(int argc, const char *argv[])
 	free(msgs);
 	free(dict);
 	free(map);
+	free(symbols);
 
 	return 0;
 }

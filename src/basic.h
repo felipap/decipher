@@ -26,20 +26,14 @@ char ** dict;
 int  ** msgs;
 
 
-void *cmalloc(size_t msize);
-
 int **getEncodedMsg(int * msgBuffer[]);
 
 char **getDictWords(char * dictBuffer[]);
 
-void match (MapObj * map);
+void match(MapObj * map);
 
 char *splitAlphab(char * buffer, char * alphabet, int index);
 
 void combine(MapObj * map, int * symbols, char * alphabet);
 
 int *uniquefySymbols (int * buffer, int ** msgs);
-
-void quit(char * msg);
-
-int main(int argc, const char *argv[]);

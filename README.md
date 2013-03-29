@@ -11,5 +11,5 @@
 - ...
 - [ ] **PROFIT!**
 
-### This is the end of the humble README.md.<br> Here, have a pie pie.
+### This is the end of this humble README.md.<br> Here, have a pie pie.
 ![](http://i.imgur.com/euIX5cu.png)
