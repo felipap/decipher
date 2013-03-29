@@ -6,7 +6,6 @@
 
 #include "basic.h"
 
-/*  interface */
 
 void *
 cmalloc(size_t msize)
@@ -21,10 +20,21 @@ cmalloc(size_t msize)
 	}
 	return p;
 }
-//
+
+
+
+void
+quit(char * msg)
+/* Show message and quit. */
+{
+	fprintf(stderr, "%s\n", msg);
+	exit(1);
+}
+
+
 
 int **
-getEncodedWords(int * msgBuffer[])
+getEncodedMsg(int * msgBuffer[])
 {
 	FILE * wordsfile;
 	char * buffer;
@@ -60,6 +70,8 @@ getEncodedWords(int * msgBuffer[])
 	return msgBuffer;
 }
 
+
+
 char **
 getDictWords(char * dictBuffer[])
 {
@@ -84,10 +96,10 @@ getDictWords(char * dictBuffer[])
 		word = strcpy(word, buffer);
 		dictBuffer[wcount++] = word;
 	}
-
 	dictBuffer[wcount] = NULL;
 	return dictBuffer;
 }
+
 
 
 void
@@ -108,6 +120,7 @@ match (MapObj * map)
 }
 
 
+
 char *
 splitAlphab(char * buffer, char * alphabet, int index)
 /* Copies alphabet to buffer while popping the index-nth character. */
@@ -121,6 +134,7 @@ splitAlphab(char * buffer, char * alphabet, int index)
 	free(temp);
 	return buffer;
 }
+
 
 
 void
@@ -150,6 +164,7 @@ combine(MapObj * map, int * symbols, char * alphabet)
 }
 
 
+
 int *
 uniquefySymbols (int * buffer, int * symbols)
 /* Fills buffer with unique items from symbols. */
@@ -174,48 +189,32 @@ uniquefySymbols (int * buffer, int * symbols)
 }
 
 
-void
-quit(char * msg)
-/* Show message and quit. */
-{
-	fprintf(stderr, "%s\n", msg);
-	exit(1);
-}
 
+char ** dict;
+int  ** msgs;
 
 int
 main(int argc, const char *argv[])
 {
 	MapObj * map;
+	int * symbols,
+		* s;
 
 	msgs = cmalloc(MAXS_MSGS*sizeof(char *));
-	msgs = getEncodedWords(msgs);
-
 	dict = cmalloc(MAXS_DICT*sizeof(char *));
+	map = cmalloc(sizeof(MapObj));
+	s = cmalloc(MAXL_WORD * sizeof(int));
+
+	msgs = getEncodedMsg(msgs);
 	dict = getDictWords(dict);
 
-
-	int * s = cmalloc(MAXL_WORD * sizeof(int));
+	symbols = cmalloc(MAXL_WORD * sizeof(int));
 	s = uniquefySymbols(s, msgs[0]);
-
-
-	int c=0;
-	do {
-		printf("%d-", s[c]);
-		c++;
-	} while (s[c] != -1);
-	puts("");
-
-	map = cmalloc(sizeof(MapObj));
+	
 	combine(map, s, ALPHABET);
 
 	return 0;
-	return 0;	
-	
-	do {
-		printf("%s\n", *dict);	
-	} while (*++dict);
-
-	return 0;
 }
+
+
 

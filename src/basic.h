@@ -11,8 +11,8 @@
 
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz"
-#define DICT_FILE "../dict/words.eng.small.txt"
-#define MSGS_FILE "../msgs.txt"
+#define DICT_FILE "dict/cracklib-small"
+#define MSGS_FILE "msgs.txt"
 #define MAXS_DICT 60000
 #define MAXS_MSGS 30
 #define MAXL_WORD 30+1 /* Plus null terminator. */
@@ -25,7 +25,7 @@ int  ** msgs;
 
 void *cmalloc(size_t msize);
 
-int **getEncodedWords(int * msgBuffer[]);
+int **getEncodedMsg(int * msgBuffer[]);
 
 char **getDictWords(char * dictBuffer[]);
 

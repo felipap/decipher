@@ -8,8 +8,7 @@
 #include <stdlib.h>
 
 
-/* Alphabet size. */
-#define MAPS_MAX 26
+#define MAPS_MAX 26 /* English alphabet size. */
 
 
 typedef struct {
@@ -17,16 +16,6 @@ typedef struct {
 	int values[MAPS_MAX];
 } MapObj;
 
-copyMapObj(MapObj * dest, MapObj * source) {
-freeMapObj(MapObj * map) {
-
-
-/* The single most stupid mapping object interface EVER WRITTEN.
- * f03lipe, 2013.
- */
-
-
-#include "mapObj.h"
 
 
 void freeMapObj(MapObj * map);
