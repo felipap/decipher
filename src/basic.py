@@ -5,8 +5,8 @@
 
 from string import ascii_lowercase as ALPHABET
 
-MSGS_FILE = '../msgs.txt'
-DICT_FILE = '../dict/words.eng.small.txt'
+MSGS_FILE = 'msgs.txt'
+DICT_FILE = 'dict/cracklib-small'
 
 def getmsgs():
 	with open(MSGS_FILE) as file:
@@ -15,7 +15,8 @@ def getmsgs():
 	return msgs
 
 
-dictionary = [w.replace('\n', '') for w in open(DICT_FILE).readlines()]
+def getDict():
+	return [w.replace('\n', '') for w in open(DICT_FILE).readlines()]
 
 
 def match(map):
@@ -23,22 +24,20 @@ def match(map):
 	if word in dictionary:
 		print('\t', word)
 
-def combine(map, symbols, alphabet):
-	# print "map: %s, symbols: %s, alphabet: %s" % (map, symbols, alphabet)
 
+def combine(map, symbols, alphabet):
 	if not symbols:
 		match(map)
 		return
-
-	s = symbols[0]
 	nmap = map.copy()
 	# Try to match s against all letters in the current alphabet.
 	for index, letter in enumerate(alphabet):
-		nmap[s] = letter
+		nmap[symbols[0]] = letter
 		combine(nmap, symbols[1:], alphabet[:index]+alphabet[index+1:])
 
 
 if __name__ == '__main__':
 	msgs = getmsgs()
-	word = msgs[0]
-	combine(dict(), list(set(word)), ALPHABET)
+	dictionary = getDict()
+
+	combine(dict(), list(set(msgs[0])), ALPHABET)
