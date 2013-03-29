@@ -14,7 +14,7 @@ cmalloc(size_t msize)
 	void * p;
 	char msg[15];
 
-	if (!(p = malloc(msize))) {
+	if (!(p = calloc(msize, (size_t) 1))) {
 		sprintf(msg, "malloc(%ld) failed", msize);
 		quit(msg);
 	}
@@ -57,6 +57,13 @@ getEncodedMsg(int * msgBuffer[])
 		do {
 			/* Scan an integer from the line. */
 			sscanf(buffer, "%d", msg);
+			if ((int) *msg <= 0) {
+				char * str = malloc(30);
+				sprintf(str,
+					"All tokens must be positive integers. Invalid token: %d.",
+					(int) *msg);
+				quit(str);
+			}
 			/* Skip digits before the comma. */
 			while (*buffer && *buffer++ != ',')
 				;
@@ -95,28 +102,68 @@ getDictWords(char * dictBuffer[])
 		word = cmalloc(wsize);
 		word = strcpy(word, buffer);
 		dictBuffer[wcount++] = word;
+
+		/* `word = word.lower()` */
+		for (; *word; word++)
+			*word = tolower(*word);
 	}
 	dictBuffer[wcount] = NULL;
 	return dictBuffer;
 }
 
 
+void
+printIntArray (int * ptr)
+{
+	printf("%d", *ptr++);
+	for (; *ptr != -1; ptr++)
+		printf(",%d", *ptr);
+	printf("\n");
+}
+
 
 void
-match (MapObj * map)
+printMessage(MapObj * map, int ** msgs)
 {
-	char ** word = dict;
-	int	 * msg = *msgs;
-	
-	char h[50];
-	mapToWord(h, map, msg);
+	char * word = cmalloc(50);
 
-	while (*(++word)) {
-		// printf("> %s\n", *word);
-		if (!strcmp(h, *word))
-			printf("%s\n", h);
+	printf("> ");
+	for (; *msgs; msgs++) {
+		word = mapToWord(word, map, *msgs);
+		printf("%s ", word);
 	}
-	// printMap(map);
+	printf("\n");
+}
+
+
+void
+match(MapObj * map)
+{
+	int	 ** ptr, cmp;
+	char ** wptr,
+		 * word = cmalloc(50);
+
+	for (ptr=msgs; *ptr; ptr++) {
+		/* Loop through encoded message. */
+		word = mapToWord(word, map, *ptr);
+		// printMessage(map, msgs); 
+
+		for (wptr=dict; *wptr; wptr++) {
+			/* Loop through dictionary words. */
+			cmp = strcmp(word, *wptr);
+			if (!cmp || cmp < 0)
+				break;
+			// printf("> %s > %s, %d\n", word, *wptr, cmp);
+		}
+		if (cmp) 
+			/* Word didn't match .*/
+			goto RETURN;
+		// printf("> %s\n", word);
+	}
+	printMessage(map, msgs); 
+
+RETURN:
+	free(word);
 }
 
 
@@ -163,28 +210,27 @@ combine(MapObj * map, int * symbols, char * alphabet)
 	freeMapObj(nmap);
 }
 
-
-
 int *
-uniquefySymbols (int * buffer, int * symbols)
-/* Fills buffer with unique items from symbols. */
+uniquefySymbols (int * buffer, int ** msgs)
+/* Fills buffer with unique items from msgs. */
 {
-	int * p = symbols,
+	int * p,
 		* p2,
 		count = 0;
-	
-	for (p = symbols; *p != -1; p++) {
-		for (p2 = symbols; p2 != p; p2++) {
-			if (*p == *p2)
-				break;
+	for (; *msgs; msgs++) {
+		/* Loop through all messages. */
+		for (p = *msgs; *p != -1; p++) {
+			for (p2 = buffer; *p2 != 0; p2++)
+				if (*p == *p2)
+					break;
+			if (!*p2) {
+				/* Symbol currently pointed by p wasn't found by p2:
+				 * the loop didn't break. */
+				buffer[count++] = *p;	
+			}
 		}
-		if (p == p2) {
-			/* Symbol currently pointed by p wasn't found by p2:
-			 * the loop didn't break. */
-			buffer[count++] = *p;	
-		}
+		buffer[count] = -1;
 	}
-	buffer[count] = -1;
 	return buffer;
 }
 
@@ -197,21 +243,26 @@ int
 main(int argc, const char *argv[])
 {
 	MapObj * map;
-	int * symbols,
-		* s;
+	int * symbols;
 
 	msgs = cmalloc(MAXS_MSGS*sizeof(char *));
 	dict = cmalloc(MAXS_DICT*sizeof(char *));
 	map = cmalloc(sizeof(MapObj));
-	s = cmalloc(MAXL_WORD * sizeof(int));
 
-	msgs = getEncodedMsg(msgs);
 	dict = getDictWords(dict);
+	puts("Finished reading the dictionary.");
+	msgs = getEncodedMsg(msgs);
+	puts("Finished reading the encoded message.");
 
-	symbols = cmalloc(MAXL_WORD * sizeof(int));
-	s = uniquefySymbols(s, msgs[0]);
+	symbols = uniquefySymbols(cmalloc(ALPHBSIZE*sizeof(int)), msgs);
+	printf("The symbols found in the encoded message were ");
+	printIntArray(symbols);
 	
-	combine(map, s, ALPHABET);
+	combine(map, symbols, ALPHABET);
+
+	free(msgs);
+	free(dict);
+	free(map);
 
 	return 0;
 }

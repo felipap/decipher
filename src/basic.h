@@ -11,9 +11,12 @@
 
 
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz"
-#define DICT_FILE "dict/cracklib-small"
+#define ALPHBSIZE 26
+
+#define DICT_FILE "dict/words"
 #define MSGS_FILE "msgs.txt"
-#define MAXS_DICT 60000
+
+#define MAXS_DICT 100000
 #define MAXS_MSGS 30
 #define MAXL_WORD 30+1 /* Plus null terminator. */
 #define MAXL_MSGW MAXL_WORD*3 /* One char seldom uses + than 2 digits + ','. */
@@ -35,7 +38,7 @@ char *splitAlphab(char * buffer, char * alphabet, int index);
 
 void combine(MapObj * map, int * symbols, char * alphabet);
 
-int *uniquefySymbols (int * buffer, int * symbols);
+int *uniquefySymbols (int * buffer, int ** msgs);
 
 void quit(char * msg);
 

@@ -4,6 +4,7 @@
 # by Felipe Aragão Pires, 2013.
 
 from string import ascii_lowercase as ALPHABET
+from functools import reduce
 
 MSGS_FILE = 'msgs.txt'
 DICT_FILE = 'dict/cracklib-small'
@@ -20,9 +21,15 @@ def getDict():
 
 
 def match(map):
-	word = ''.join(map[k] for k in msgs[0])
-	if word in dictionary:
-		print('\t', word)
+	words = []
+	for msg in msgs:
+		word = ''.join(map[k] for k in msg)
+		if word in dictionary:
+			words.append(word)
+			continue
+		break
+	else:
+		print('\t', words)
 
 
 def combine(map, symbols, alphabet):
@@ -39,5 +46,7 @@ def combine(map, symbols, alphabet):
 if __name__ == '__main__':
 	msgs = getmsgs()
 	dictionary = getDict()
-
-	combine(dict(), list(set(msgs[0])), ALPHABET)
+	symbols = set()
+	for msg in msgs:
+		symbols.update(set(msg))
+	combine({}, list(symbols), ALPHABET)
