@@ -6,7 +6,7 @@
 ## ToDos:
 - [ ] Improve mapping interface for alphabet.
 - [ ] Hash dictionary for quick comeback after small map substitution.
-- [ ] Allow regex. No, I'm kidding. This is already slow enough as is.
+- [ ] Allow regex. No, I'm kidding. This is already slow enough as it is.
 - [ ] Optimize everything.
 - ...
 - [ ] **PROFIT!**
