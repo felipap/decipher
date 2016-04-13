@@ -109,14 +109,14 @@ match(MapObj * map)
 				break;
 			// printf("> %s > %s, %d\n", word, *wptr, cmp);
 		}
-		if (cmp) 
+		if (cmp) {
 			/* Word didn't match .*/
+			free(word);
 			goto RETURN;
+		}
 		// printf("> %s\n", word);
 	}
 	printMessage(map, msgs); 
-
-RETURN:
 	free(word);
 }
 
